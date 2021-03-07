@@ -1,6 +1,7 @@
 # SocketUDP
 
 <h1>First</h1> 
+<p>This is a library that analyzes whether the player is online or not, there is in addition to the disconnection system, O (Desconnect), a system that if the customer spends X time without sending a message, he disconnects it and this is controlled by (ConnetedUpdate (msg, rinfo, timeConnect)). With this your server is protected from data overload inside it.</p>
 
 ```const dgram = require("dgram");
 const server = dgram.createSocket("udp4");
@@ -17,7 +18,7 @@ server.on('error', (err) => {
   });
 
 server.on("message",(msg,rinfo)=>{
-  socket.ConnectedFirst(msg,rinfo)
+  socket.ConnectedUpdate(msg,rinfo)
 
   socket.Send("msg", "Sending msg from the server")
   
@@ -52,7 +53,8 @@ This method must always be set before all methods, after the native (dgram) meth
 <p>
 ConnectedUpdate has three parameters, the first is a message received from on ("message") and the other is a rinfo from also from on ("message") and the third is the time you determine for the disconnection of absent users.
 
-<strong>Example: socket.UpdatedUpdate(msg,rinfo,0.5(param optional))</strong>
+<strong>Example: </strong>
+<code>socket.UpdatedUpdate(msg,rinfo,0.5(optional parameter))</code>
 </p>
   <h4>On</h4>
   <p>
@@ -78,4 +80,31 @@ The send method sends a message to the client and has two parameters, one is the
 <code>
 socket.BroadCast("Hello everybody")
 </code>
+<h4>Join</h4>
+<p>This is a method for us to enter a room, send the client a message that will be the name of your room and activate the Join method ("message"), this message will be the door and all messages heard inside this door will only be those that are inside it will hear</p>
+<strong>Example:</strong>
+<code>
+    socket.On("join", ({port,msg})=>{
+    socket.Join(msg)
+  })
+</code>
+
+
+<h4>Leave</h4>
+<p>
+This triggered method will cause the customer to leave the room they entered.</p>
+<p>
+Each customer can only enter one room. 
+There are no parameters in this function, as it identifies whether the user is in a room, if it is already removed</p>
+<strong>Example:</strong>
+<code>
+    socket.On("leave", ({port,msg})=>{
+    socket.Leave()
+  })
+</code>
+<h4>Disconnect</h4>
+<p>This method disconnects the client from the server, deleting it from the array that memorizes the IPS to send messages. If the client does not send a message for a certain period of time he will disconnect himself, who does this is the main function ConnectedUpdate (msg, rinfo, timeDisconnected (optional))</p>
+<h5>This library was created to favor those who have difficulty controlling their DataGrams. It is also not in perfect shape, it may contain bugs and errors. Thanks! </h5>
+
+
   
