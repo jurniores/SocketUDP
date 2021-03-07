@@ -61,9 +61,21 @@ ConnectedUpdate has three parameters, the first is a message received from on ("
 <h5><i>
 Example:</i></h5>
 
-```
+<code>
 socket.On("msg",({port,msg})=>{
     console.log("message: "+msg)
   })
-```
+  </code>
+<h4>Send</h4>
+<p>
+The send method sends a message to the client and has two parameters, one is the port the client will receive and the other is the message. The send method already includes an algorithm to analyze who is in a room or not.</p>
+<strong>Example:</strong>
+<code> socket.Send("port","hello client")</code>
+
+<h4>BroadCast</h4>
+<p>The BroadCast method is the method that sends to all users, if the user is listening on any port and the server sends a message with the BroadCast method, it will listen. However the customer must be listening at some door.</p>
+<strong>Example:</strong>
+<code>
+socket.BroadCast("Hello everybody")
+</code>
   
