@@ -1,7 +1,7 @@
 const dgram = require("dgram");
 const server = dgram.createSocket("udp4");
 
-const Server = require("./RouterUDP/routes");
+const Server = require("./Socket/socket");
 
 
 const socket = new Server(server);
