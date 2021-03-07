@@ -37,7 +37,7 @@ module.exports = class Server {
         
     }
 
-    ConnectedFirst(msg, rinfo){
+    ConnectedFirst(msg, rinfo, time=0.5){
         this.rinfo = rinfo;
         this.msg = msg;
 
@@ -68,7 +68,7 @@ module.exports = class Server {
     
             }
             
-            if(dataTimeAfk>=0.2){      
+            if(dataTimeAfk>=time){      
                 port = index
                 
             
@@ -103,9 +103,9 @@ module.exports = class Server {
     Diconnected(){
         
         this.client.map((valor,index)=>{
-            
-            const deletado = this.client.splice(index,1)
-            console.log(this.client)
+            if(valor.port === this.rinfo.port && valor.address === this.rinfo.address){
+                this.client.splice(index,1)
+             }
         })
     }
 }
