@@ -1,6 +1,6 @@
 {
   "name": "socket-udp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Lib for UDP connections",
   "main": "index.js",
   "scripts": {
