@@ -37,7 +37,7 @@ module.exports = class Server {
         
     }
 
-    ConnectedFirst(msg, rinfo, time=0.5){
+    ConnectedUpdate(msg, rinfo, time=0.5){
         this.rinfo = rinfo;
         this.msg = msg;
 
@@ -98,6 +98,13 @@ module.exports = class Server {
            valor.room = room
         }
        })
+    }
+    Leave(){
+        this.client.map(valor=>{
+            if(valor.port === this.rinfo.port && valor.address === this.rinfo.address){
+               valor.room = false
+            }
+           })
     }
  
     Diconnected(){

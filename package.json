@@ -1,14 +1,14 @@
 {
-  "name": "udp",
-  "version": "1.0.0",
-  "description": "Testando UDP",
+  "name": "socket-udp",
+  "version": "1.0.1",
+  "description": "Lib for UDP connections",
   "main": "index.js",
   "scripts": {
-    "start":"nodemon index.js"
+    "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
+  "devDependencies": {
     "nodemon": "^2.0.7"
   }
 }

@@ -1,5 +1,6 @@
 const dgram = require("dgram");
 const server = dgram.createSocket("udp4");
+
 const Server = require("./RouterUDP/routes");
 
 
@@ -12,12 +13,17 @@ server.on('error', (err) => {
   });
 
 server.on("message",(msg,rinfo)=>{
-  socket.ConnectedFirst(msg,rinfo)
+  socket.ConnectedUpdate(msg,rinfo)
 
   console.log(socket.client)
   
   socket.On("join", ({port,msg})=>{
     socket.Join(msg)
+  })
+
+  socket.On("leave",({port,msg})=>{
+    socket.Leave();
+    console.log(socket.client)
   })
   
 
@@ -27,7 +33,7 @@ server.on("message",(msg,rinfo)=>{
 
   socket.On('disconnect', (msg)=>{
     socket.Diconnected()
-    console.log('disconectei')
+    console.log(socket.client)
     
   })
   
