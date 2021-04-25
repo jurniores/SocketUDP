@@ -13,31 +13,15 @@ server.on('error', (err) => {
   });
 
 server.on("message",(msg,rinfo)=>{
-  socket.ConnectedUpdate(msg,rinfo)
-
-  console.log(socket.client)
+  console.log("ola");
+  socket.ConnectedUpdate(msg,rinfo,1)
   
-  socket.On("join", ({port,msg})=>{
-    socket.Join(msg)
-  })
-
-  socket.On("leave",({port,msg})=>{
-    socket.Leave();
+  
+  socket.On("chat",({port,msg})=>{
+    socket.SendNotOnce("chat",msg);
     console.log(socket.client)
   })
   
-
-  socket.BroadCast("Bom dia")
-
-  socket.Send("void", "Enviando MSg do servidor")
-
-  socket.On('disconnect', (msg)=>{
-    socket.Diconnected()
-    console.log(socket.client)
-    
-  })
-  
-
 })
 
 

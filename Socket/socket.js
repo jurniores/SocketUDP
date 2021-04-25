@@ -11,7 +11,7 @@ module.exports = class Server {
         
         
     }
-    
+    //Listen event
     On(valida, call){
         let string = this.msg.toString()
         let novaMsg = string.split(':')
@@ -22,21 +22,39 @@ module.exports = class Server {
         }
         
     }
+
+    SendNotOnce(send, msg){
+        this.client.map(valor=>{
+            //Valida se tiver uma sala envia a mensagem para aquela sala.
+            if(valor.room) {
+                this.socket.send(`${valor.room}:${msg} (${send})`, valor.port)
+            }
+            if(valor.port != this.rinfo.port){
+                this.socket.send(`${send}:${msg}`, valor.port)
+            }
+            
+        })
+    }
+
+    //Send message
     Send(send, msg){
         this.client.map(valor=>{
             //Valida se tiver uma sala envia a mensagem para aquela sala.
-            if(valor.room) return this.socket.send(`${valor.room}:${msg} (${send})`, valor.port)
-            this.socket.send(`${send}:${msg} (${send})`, valor.port)
+            if(valor.room) {
+                this.socket.send(`${valor.room}:${msg} (${send})`, valor.port)
+            }
+            this.socket.send(`${send}:${msg}`, valor.port)
         })
         
     }
+    //Send Broadcast
     BroadCast(msg){
         this.client.map(valor=>{
             this.socket.send(`brc:${msg} (BroadCast)`, valor.port)
         })
         
     }
-
+    //Connect and DISCONNECT clients
     ConnectedUpdate(msg, rinfo, time=0.5){
         this.rinfo = rinfo;
         this.msg = msg;
@@ -90,7 +108,7 @@ module.exports = class Server {
         }
          
     }
-      
+      //Join room OOR party 
     Join(room){
         
        this.client.map(valor=>{
@@ -99,6 +117,8 @@ module.exports = class Server {
         }
        })
     }
+
+    //leave Room
     Leave(){
         this.client.map(valor=>{
             if(valor.port === this.rinfo.port && valor.address === this.rinfo.address){
@@ -106,7 +126,7 @@ module.exports = class Server {
             }
            })
     }
- 
+    
     Diconnected(){
         
         this.client.map((valor,index)=>{
