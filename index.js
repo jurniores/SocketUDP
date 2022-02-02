@@ -130,10 +130,10 @@ server.on("message",(msg,rinfo)=>{
   });
   
   
-  server.bind(3000);
+  server.bind(port);
 
 
-
+  
   //Servidor WEB
 
   app.get("/",(req,res)=>{
