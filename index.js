@@ -146,4 +146,4 @@ server.on("message",(msg,rinfo)=>{
     
   })
 
-  app.listen(port,()=>console.log("Servidor TCP rodando na porta "+port))
+  app.listen(port,()=>console.log("Servidor TCP rodando na porta "+port+"Endereço: "+process.env.ADDRESS))
