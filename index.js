@@ -7,7 +7,7 @@ var playersServer = []
 
 const Server = require("./Socket/socket");
 
-
+var port = process.env.PORT||3000;
 const socket = new Server(server);
 
 
@@ -146,4 +146,4 @@ server.on("message",(msg,rinfo)=>{
     
   })
 
-  app.listen(3000,()=>console.log("Servidor TCP rodando na porta 3000"))
+  app.listen(port,()=>console.log("Servidor TCP rodando na porta "+port))
