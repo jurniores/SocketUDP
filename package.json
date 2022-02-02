@@ -4,7 +4,7 @@
   "description": "Lib for UDP connections",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
@@ -12,6 +12,7 @@
     "nodemon": "^2.0.7"
   },
   "dependencies": {
-    "dgram": "^1.0.1"
+    "dgram": "^1.0.1",
+    "express": "^4.17.2"
   }
 }

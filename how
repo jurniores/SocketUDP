@@ -1,0 +1,190 @@
+[33mcommit 5ef3d49fbc98153b5c387d23fbc5bd55e505943e[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Antonio Junior <jurniores@gmail.com>
+Date:   Sun Apr 25 18:54:16 2021 -0300
+
+    Inset sendNotMe
+
+[1mdiff --git a/Socket/socket.js b/Socket/socket.js[m
+[1mindex 48c6a8b..094cdc8 100644[m
+[1m--- a/Socket/socket.js[m
+[1m+++ b/Socket/socket.js[m
+[36m@@ -11,7 +11,7 @@[m [mmodule.exports = class Server {[m
+         [m
+         [m
+     }[m
+[31m-    [m
+[32m+[m[32m    //Listen event[m
+     On(valida, call){[m
+         let string = this.msg.toString()[m
+         let novaMsg = string.split(':')[m
+[36m@@ -22,21 +22,39 @@[m [mmodule.exports = class Server {[m
+         }[m
+         [m
+     }[m
+[32m+[m
+[32m+[m[32m    SendNotOnce(send, msg){[m
+[32m+[m[32m        this.client.map(valor=>{[m
+[32m+[m[32m            //Valida se tiver uma sala envia a mensagem para aquela sala.[m
+[32m+[m[32m            if(valor.room) {[m
+[32m+[m[32m                this.socket.send(`${valor.room}:${msg} (${send})`, valor.port)[m
+[32m+[m[32m            }[m
+[32m+[m[32m            if(valor.port != this.rinfo.port){[m
+[32m+[m[32m                this.socket.send(`${send}:${msg}`, valor.port)[m
+[32m+[m[32m            }[m
+[32m+[m[41m            [m
+[32m+[m[32m        })[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    //Send message[m
+     Send(send, msg){[m
+         this.client.map(valor=>{[m
+             //Valida se tiver uma sala envia a mensagem para aquela sala.[m
+[31m-            if(valor.room) return this.socket.send(`${valor.room}:${msg} (${send})`, valor.port)[m
+[31m-            this.socket.send(`${send}:${msg} (${send})`, valor.port)[m
+[32m+[m[32m            if(valor.room) {[m
+[32m+[m[32m                this.socket.send(`${valor.room}:${msg} (${send})`, valor.port)[m
+[32m+[m[32m            }[m
+[32m+[m[32m            this.socket.send(`${send}:${msg}`, valor.port)[m
+         })[m
+         [m
+     }[m
+[32m+[m[32m    //Send Broadcast[m
+     BroadCast(msg){[m
+         this.client.map(valor=>{[m
+             this.socket.send(`brc:${msg} (BroadCast)`, valor.port)[m
+         })[m
+         [m
+     }[m
+[31m-[m
+[32m+[m[32m    //Connect and DISCONNECT clients[m
+     ConnectedUpdate(msg, rinfo, time=0.5){[m
+         this.rinfo = rinfo;[m
+         this.msg = msg;[m
+[36m@@ -90,7 +108,7 @@[m [mmodule.exports = class Server {[m
+         }[m
+          [m
+     }[m
+[31m-      [m
+[32m+[m[32m      //Join room OOR party[m[41m [m
+     Join(room){[m
+         [m
+        this.client.map(valor=>{[m
+[36m@@ -99,6 +117,8 @@[m [mmodule.exports = class Server {[m
+         }[m
+        })[m
+     }[m
+[32m+[m
+[32m+[m[32m    //leave Room[m
+     Leave(){[m
+         this.client.map(valor=>{[m
+             if(valor.port === this.rinfo.port && valor.address === this.rinfo.address){[m
+[36m@@ -106,7 +126,7 @@[m [mmodule.exports = class Server {[m
+             }[m
+            })[m
+     }[m
+[31m- [m
+[32m+[m[41m    [m
+     Diconnected(){[m
+         [m
+         this.client.map((valor,index)=>{[m
+[1mdiff --git a/index.js b/index.js[m
+[1mindex 46c98c2..67fcf0f 100644[m
+[1m--- a/index.js[m
+[1m+++ b/index.js[m
+[36m@@ -13,31 +13,15 @@[m [mserver.on('error', (err) => {[m
+   });[m
+ [m
+ server.on("message",(msg,rinfo)=>{[m
+[31m-  socket.ConnectedUpdate(msg,rinfo)[m
+[31m-[m
+[31m-  console.log(socket.client)[m
+[32m+[m[32m  console.log("ola");[m
+[32m+[m[32m  socket.ConnectedUpdate(msg,rinfo,1)[m
+   [m
+[31m-  socket.On("join", ({port,msg})=>{[m
+[31m-    socket.Join(msg)[m
+[31m-  })[m
+[31m-[m
+[31m-  socket.On("leave",({port,msg})=>{[m
+[31m-    socket.Leave();[m
+[31m-    console.log(socket.client)[m
+[31m-  })[m
+   [m
+[31m-[m
+[31m-  socket.BroadCast("Bom dia")[m
+[31m-[m
+[31m-  socket.Send("void", "Enviando MSg do servidor")[m
+[31m-[m
+[31m-  socket.On('disconnect', (msg)=>{[m
+[31m-    socket.Diconnected()[m
+[32m+[m[32m  socket.On("chat",({port,msg})=>{[m
+[32m+[m[32m    socket.SendNotOnce("chat",msg);[m
+     console.log(socket.client)[m
+[31m-    [m
+   })[m
+   [m
+[31m-[m
+ })[m
+ [m
+ [m
+[1mdiff --git a/package-lock.json b/package-lock.json[m
+[1mindex 11139ad..f2c672c 100644[m
+[1m--- a/package-lock.json[m
+[1m+++ b/package-lock.json[m
+[36m@@ -1,13 +1,16 @@[m
+ {[m
+   "name": "socket-udp",[m
+[31m-  "version": "1.0.0",[m
+[32m+[m[32m  "version": "1.0.2",[m
+   "lockfileVersion": 2,[m
+   "requires": true,[m
+   "packages": {[m
+     "": {[m
+       "name": "socket-udp",[m
+[31m-      "version": "1.0.0",[m
+[32m+[m[32m      "version": "1.0.2",[m
+       "license": "ISC",[m
+[32m+[m[32m      "dependencies": {[m
+[32m+[m[32m        "dgram": "^1.0.1"[m
+[32m+[m[32m      },[m
+       "devDependencies": {[m
+         "nodemon": "^2.0.7"[m
+       }[m
+[36m@@ -413,6 +416,12 @@[m
+       "integrity": "sha512-0ISdNousHvZT2EiFlZeZAHBUvSxmKswVCEf8hW7KWgG4a8MVEu/3Vb6uWYozkjylyCxe0JBIiRB1jV45S70WVQ==",[m
+       "dev": true[m
+     },[m
+[32m+[m[32m    "node_modules/dgram": {[m
+[32m+[m[32m      "version": "1.0.1",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/dgram/-/dgram-1.0.1.tgz",[m
+[32m+[m[32m      "integrity": "sha1-N/OyAPgDOl/3WTAwicgc42G2UcM=",[m
+[32m+[m[32m      "deprecated": "npm is holding this package for security reasons. As it's a core Node module, we will not transfer it over to other users. You may safely remove the package from your dependencies."[m
+[32m+[m[32m    },[m
+     "node_modules/dot-prop": {[m
+       "version": "5.3.0",[m
+       "resolved": "https://registry.npmjs.org/dot-prop/-/dot-prop-5.3.0.tgz",[m
+[36m@@ -1603,6 +1612,11 @@[m
+       "integrity": "sha512-0ISdNousHvZT2EiFlZeZAHBUvSxmKswVCEf8hW7KWgG4a8MVEu/3Vb6uWYozkjylyCxe0JBIiRB1jV45S70WVQ==",[m
+       "dev": true[m
+     },[m
+[32m+[m[32m    "dgram": {[m
+[32m+[m[32m      "version": "1.0.1",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/dgram/-/dgram-1.0.1.tgz",[m
+[32m+[m[32m      "integrity": "sha1-N/OyAPgDOl/3WTAwicgc42G2UcM="[m
+[32m+[m[32m    },[m
+     "dot-prop": {[m
+       "version": "5.3.0",[m
+       "resolved": "https://registry.npmjs.org/dot-prop/-/dot-prop-5.3.0.tgz",[m
+[1mdiff --git a/package.json b/package.json[m
+[1mindex 86142cf..d37c4e0 100644[m
+[1m--- a/package.json[m
+[1m+++ b/package.json[m
+[36m@@ -10,5 +10,8 @@[m
+   "license": "ISC",[m
+   "devDependencies": {[m
+     "nodemon": "^2.0.7"[m
+[32m+[m[32m  },[m
+[32m+[m[32m  "dependencies": {[m
+[32m+[m[32m    "dgram": "^1.0.1"[m
+   }[m
+ }[m
